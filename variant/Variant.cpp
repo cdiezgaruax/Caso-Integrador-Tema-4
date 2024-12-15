@@ -11,16 +11,16 @@ Variant::Variant(variant_type type, const std::string& val) : type(type), val(va
 Variant::Variant(proc_type proc) : type(Proc), proc(proc), env(nullptr) {}
 
 // Implementación de los métodos
-
 std::string Variant::to_string() {
     switch (type) {
         case Symbol:
             return val;
         case Number:
-            return val;  // Asumiendo que val es el número en formato string
+            return val; // Asumiendo que val es el número en formato string
         case Cadena:
             return "\"" + val + "\"";
         case List: {
+            if (list.empty()) return "()"; // Manejo de listas vacías
             std::string r = "(";
             for (size_t i = 0; i < list.size(); i++) {
                 r += list[i].to_string();
@@ -135,4 +135,38 @@ variant_type Variant::string_to_variant_type(const std::string &s) {
     if (s == "Lambda") return Lambda;
     if (s == "Cadena") return Cadena;
     throw std::runtime_error("Tipo desconocido: " + s);
+}
+
+
+#include "Entorno.h"
+
+// Evalúa una expresión dentro de un entorno
+Variant evaluar(const Variant& expr, Entorno& env) {
+    if (expr.type == Symbol) {
+        // Busca el símbolo en el entorno
+        return env.buscar(expr.val);
+    } else if (expr.type == List) {
+        if (expr.list.empty()) {
+            throw std::runtime_error("Error: lista vacía no se puede evaluar.");
+        }
+
+        // El primer elemento de la lista debe ser una función
+        Variant fn = evaluar(expr.list[0], env);
+
+        if (fn.type != Proc) {
+            throw std::runtime_error("Error: el primer elemento no es una función.");
+        }
+
+        // Evalúa los argumentos
+        std::vector<Variant> args;
+        for (size_t i = 1; i < expr.list.size(); ++i) {
+            args.push_back(evaluar(expr.list[i], env));
+        }
+
+        // Llama al procedimiento
+        return fn.proc(args);
+    }
+
+    // Para valores atómicos, simplemente se devuelve la instancia
+    return expr;
 }

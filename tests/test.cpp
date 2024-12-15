@@ -99,6 +99,9 @@ int ejecutar_test() {
 
             std::cout << "Reconstruido desde JSON: " << reconstructed.to_string() << "\n";
             log_test("Reconstruir Variant List desde JSON", true);
+
+            // Mostrar el resultado final
+            std::cout << "Resultado final: " << reconstructed.to_string() << "\n";
         } catch (const std::exception& e) {
             log_test("Reconstruir Variant List desde JSON", false);
             std::cerr << "Error: " << e.what() << std::endl;

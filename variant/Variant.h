@@ -1,5 +1,5 @@
-#ifndef TINYLISP_H
-#define TINYLISP_H
+#ifndef VARIANT_H
+#define VARIANT_H
 
 #include <iostream>
 #include <vector>
@@ -47,4 +47,4 @@ private:
     static variant_type string_to_variant_type(const std::string &s);
 };
 
-#endif // TINYLISP_H
+#endif // VARIANT_H

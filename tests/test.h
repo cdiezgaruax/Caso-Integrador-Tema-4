@@ -1,6 +1,6 @@
-#ifndef TEST1_H
-#define TEST1_H
+#ifndef TEST_H
+#define TEST_H
 
 int ejecutar_test();
 
-#endif //TEST1_H
+#endif //TEST_H
