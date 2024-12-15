@@ -19,14 +19,41 @@ bool is_number(const std::string& s) {
 int ejecutar_test() {
     try {
         std::string phrase;
-        std::cout << "Di una frase: ";
+        std::cout << "Di una frase y entre [ pon usasa simbolos para symbol numeros para number \"\" para cadena y () para listas: ";
         std::getline(std::cin, phrase);
 
         std::istringstream iss(phrase);
         std::vector<std::string> words;
         std::string word;
+        bool in_quotes = false;
+        std::string quoted_word;
+        bool in_list = false;
+        std::string list_word;
+
         while (iss >> word) {
-            words.push_back(word);
+            if (word.front() == '"' && word.back() == '"') {
+                words.push_back(word);
+            } else if (word.front() == '"') {
+                in_quotes = true;
+                quoted_word = word;
+            } else if (word.back() == '"') {
+                in_quotes = false;
+                quoted_word += " " + word;
+                words.push_back(quoted_word);
+            } else if (in_quotes) {
+                quoted_word += " " + word;
+            } else if (word.front() == '(') {
+                in_list = true;
+                list_word = word;
+            } else if (word.back() == ')') {
+                in_list = false;
+                list_word += " " + word;
+                words.push_back(list_word);
+            } else if (in_list) {
+                list_word += " " + word;
+            } else {
+                words.push_back(word);
+            }
         }
 
         // Prueba 1: Crear un Variant List con las palabras como simbolos y numeros
@@ -35,6 +62,20 @@ int ejecutar_test() {
             for (const auto& w : words) {
                 if (is_number(w)) {
                     lst.list.push_back(Variant(Number, w));
+                } else if (w.front() == '"' && w.back() == '"') {
+                    lst.list.push_back(Variant(Cadena, w.substr(1, w.size() - 2)));
+                } else if (w.front() == '(' && w.back() == ')') {
+                    std::istringstream list_iss(w.substr(1, w.size() - 2));
+                    Variant sublist(List);
+                    std::string subword;
+                    while (list_iss >> subword) {
+                        if (is_number(subword)) {
+                            sublist.list.push_back(Variant(Number, subword));
+                        } else {
+                            sublist.list.push_back(Variant(Symbol, subword));
+                        }
+                    }
+                    lst.list.push_back(sublist);
                 } else {
                     lst.list.push_back(Variant(Symbol, w));
                 }
@@ -52,6 +93,20 @@ int ejecutar_test() {
             for (const auto& w : words) {
                 if (is_number(w)) {
                     lst.list.push_back(Variant(Number, w));
+                } else if (w.front() == '"' && w.back() == '"') {
+                    lst.list.push_back(Variant(Cadena, w.substr(1, w.size() - 2)));
+                } else if (w.front() == '(' && w.back() == ')') {
+                    std::istringstream list_iss(w.substr(1, w.size() - 2));
+                    Variant sublist(List);
+                    std::string subword;
+                    while (list_iss >> subword) {
+                        if (is_number(subword)) {
+                            sublist.list.push_back(Variant(Number, subword));
+                        } else {
+                            sublist.list.push_back(Variant(Symbol, subword));
+                        }
+                    }
+                    lst.list.push_back(sublist);
                 } else {
                     lst.list.push_back(Variant(Symbol, w));
                 }
@@ -70,6 +125,20 @@ int ejecutar_test() {
             for (const auto& w : words) {
                 if (is_number(w)) {
                     lst.list.push_back(Variant(Number, w));
+                } else if (w.front() == '"' && w.back() == '"') {
+                    lst.list.push_back(Variant(Cadena, w.substr(1, w.size() - 2)));
+                } else if (w.front() == '(' && w.back() == ')') {
+                    std::istringstream list_iss(w.substr(1, w.size() - 2));
+                    Variant sublist(List);
+                    std::string subword;
+                    while (list_iss >> subword) {
+                        if (is_number(subword)) {
+                            sublist.list.push_back(Variant(Number, subword));
+                        } else {
+                            sublist.list.push_back(Variant(Symbol, subword));
+                        }
+                    }
+                    lst.list.push_back(sublist);
                 } else {
                     lst.list.push_back(Variant(Symbol, w));
                 }
@@ -89,6 +158,20 @@ int ejecutar_test() {
             for (const auto& w : words) {
                 if (is_number(w)) {
                     lst.list.push_back(Variant(Number, w));
+                } else if (w.front() == '"' && w.back() == '"') {
+                    lst.list.push_back(Variant(Cadena, w.substr(1, w.size() - 2)));
+                } else if (w.front() == '(' && w.back() == ')') {
+                    std::istringstream list_iss(w.substr(1, w.size() - 2));
+                    Variant sublist(List);
+                    std::string subword;
+                    while (list_iss >> subword) {
+                        if (is_number(subword)) {
+                            sublist.list.push_back(Variant(Number, subword));
+                        } else {
+                            sublist.list.push_back(Variant(Symbol, subword));
+                        }
+                    }
+                    lst.list.push_back(sublist);
                 } else {
                     lst.list.push_back(Variant(Symbol, w));
                 }
